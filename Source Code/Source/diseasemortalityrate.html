@@ -1,0 +1,113 @@
+<html>
+<head>
+<title>Disease Mortality Rate Dashboard</title>
+<!-- All the CSS files and the JavaScript Library files are linked to the local directory in the below section-->
+	<link rel="icon" href="images/icon.png" type="image/png" />
+    <link rel="stylesheet" type="text/css" href="styles/Custom.css">
+	<link rel="stylesheet" type="text/css" href="styles/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="styles/dataTables.bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+	<script src="node_modules/es6/ES6.js"></script>
+	<script src="node_modules/file-saver/FileSaver.js"></script>
+	<script src="node_modules/dataframe-js/dist/dataframe.js"></script>
+	<script src="node_modules/chart.js/dist/Chart.js"></script>
+	<script src="js/mortality.js"></script>
+	<script src="js/ModelUtility.js"></script>
+	<script src="js/ControllerUtility.js"></script>
+	<script src="js/constants/Constant.js"></script>
+	<script src="js/jquery-1.12.4.js"></script>
+	<script src="DataTables-1.10.15/media/js/canvasjs.min.js"></script>
+	<script src="DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+	<script src="DataTables-1.10.15/media/js/dataTables.jqueryui.min.js"></script>
+	<script src="DataTables-1.10.15/media/js/dataTables.bootstrap.min.js"></script>
+	
+</head>
+<body>
+<div>
+
+       <div style="position: absolute; color: red; margin-top: 36px; font-size: 42px; margin-left: 140px; opacity: 0.5; font-family: 'Cooper Black';">Disease
+			Mortality rate</div>
+		<img src="images/pic4.gif" height="200" width="100%">
+	</div>
+    <div>         
+<form style="width: 62%">
+			<div style="width: 100%">
+				<div class="datasetName" style="float: left; width: 50%">
+					<h3
+						style="margin-left: 80px; font-weight: bold; font-family: Arial;">Select
+						the Dataset</h3>
+				</div>
+						<div style="width:150%;float:left;margin-top:20px;margin-left:75px">
+		
+		<!-- It is used to select the dataset and display it on the click click of the button --> 		
+         		    <input type="button" id="datasets1" name="Select" value="Cancer" style="width: 200px;background-color: ORANGE;FONT-WEIGHT: BOLD;font-size: 18px;height: 50px;" onclick="retreivedata('cancer.csv')"></input>
+					<input type="button" id="datasets11" name="Select" value="Infant Mortality" style="width: 200px;background-color: ORANGE;FONT-WEIGHT: BOLD;font-size: 18px;height: 50px;" onclick="retreivedata('InfantMortality.csv')"></input>
+					<input type="button" id="datasets12" name="Select" value="Drug Poisioning" style="width: 200px;background-color: ORANGE;FONT-WEIGHT: BOLD;font-size: 18px;height: 50px;" onclick="retreivedata('DrugPoisioning.csv')"></input>
+					<input type="button" id="datasets13" name="Select" value="Heart Disease" style="width: 200px;background-color: ORANGE;FONT-WEIGHT: BOLD;font-size: 18px;height: 50px;" onclick="retreivedata('HeartDisease.csv')"></input>
+					<input type="button" id="datasets14" name="Select" value="Ischemic Stroke" style="width: 200px;background-color: ORANGE;FONT-WEIGHT: BOLD;font-size: 18px;height: 50px;" onclick="retreivedata('IschemicStroke.csv')"></input>
+				
+				</div>
+			<!-- retreivedata(vals) function is used to get data from the dataset and dataframe is used to load it-->
+			
+			<div id="table" class="table-responsive dataTable"
+				style="padding-top: 30px;padding-bottom: 30px !important;margin-left:40px;">
+			</div> 
+		</div></form>
+		<div id="filter"></div>
+		<div id="filter-row"  hidden="true">
+			<br>
+			<!-- This function is used to select various filter from the given datatable-->
+			<div id="categorical-filter" style="border-top:1px solid;margin-left:40px">
+				<div style="display:block;font-weight:bold;margin-top:20px;margin-left: 440px;font-size: 16px;color: blue;">Please Select the column that you want to filter</div>
+				<div align="center"id="categorical-filter-checkbox" style="display:flex; flex-flow:row wrap;"></div>
+			</div>
+			<br>
+			
+			<!--This div is used to show numerical filtering operation -->
+			<div id="numerical-condition" style ="border-top: 1px solid;padding-top: 20px; margin-left:40px;">
+				<label style="display:block;font-weight:bold;margin-left: 510px;font-size: 16px;color: blue;">Select The Filter Conditions</label>
+				<input type="radio" name="numericalFilter" value="greaterThanEqualTo"> Greater Than Equal To </input><br />
+				<input type="radio" name="numericalFilter" value="lessThanEqualTo"> Less Than Equal To</input><br />
+				<input type="radio" name="numericalFilter" value="equalTo"> Equal To</input><br />
+			</div>
+			<br>
+			
+			<!-- This function is used for entering numerical value for comparision-->
+			<div id="numerical-value" style="border-top: 1px solid;padding-top: 20px;margin-left:40px;">
+				<label style="display:block;font-weight:bold;padding-left: 475px;font-size: 16;color: blue;" >Please Enter Value To Filter</label>
+				<input id= "numericalFilter" style="background-color: white; border: groove;color: black;padding: 1px 0px; text-align: center; text-decoration: none;margin-top: 20px;"  type="number" name="numericalFilter" value="numericalFilter"></input>
+			</div>
+			<br>
+			
+			<!-- This div is used to display option for selecting the chart that need to be displayed -->
+			<div id="plot-graph" style="margin-left:40px;">
+			<form>
+				<label style="display:block;font-weight:bold;">Please Select the Chart</label>
+				<input type="checkbox" id="barChart" name="barChart" value="Bar Chart"> Bar Chart</input>	
+				<input type="checkbox" id="pieChart" name="pieChart" value="Pie Chart"> Pie Chart</input>
+				<input type="checkbox" id="lineChart" name="lineChart" value="Line Chart"> Line Chart</input>
+				<input type="checkbox" id="doughnutChart" name="doughnutChart" value="Doughnut Chart"> Doughnut Chart</input><br /><br />
+				<input type="button" name="applyCharts" onclick="displayCharts()" value="Apply Charts"></input><br>
+				<!-- applyChart() is the function which is used to call the plot() function which is present in the class Chartoperation-->
+			</form>	
+			</div>
+		</div>
+    </div>
+
+	<!-- This canvas is used to display -->
+	<div id="parentChart" hidden="true">
+		<div id="childChart" class="chart">
+			<canvas id="piechartcanvas"></canvas>
+			<canvas id="barchartcanvas"></canvas>
+			<canvas id="linechartcanvas"></canvas>
+			<canvas id="doughnutchartcanvas"></canvas>
+			<br/>
+		</div>
+	
+	</div>
+<div class="seperator"></div>
+	<br><br><br><br><br><br>
+
+</body>
+</html>
+
